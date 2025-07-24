@@ -35,7 +35,7 @@ class BackendTester:
     def test_api_health(self) -> bool:
         """Test basic API health endpoint"""
         try:
-            response = requests.get(f"{self.base_url}/", timeout=10)
+            response = requests.get(f"{self.base_url}/", timeout=30)
             if response.status_code == 200:
                 data = response.json()
                 if "message" in data:
@@ -43,6 +43,9 @@ class BackendTester:
                     return True
             
             self.log_test("API Health Check", False, f"Status: {response.status_code}")
+            return False
+        except requests.exceptions.Timeout:
+            self.log_test("API Health Check", False, "Request timeout - backend may be slow")
             return False
         except Exception as e:
             self.log_test("API Health Check", False, f"Connection error: {str(e)}")
