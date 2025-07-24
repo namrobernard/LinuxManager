@@ -152,17 +152,20 @@ MIIEpAIBAAKCAQEA1234567890abcdef...
             return False
         
         success_count = 0
+        response_status = None
         
         # Test system info endpoint (requires SSH)
         try:
             server_id = self.created_servers[0]
             response = requests.get(f"{self.base_url}/servers/{server_id}/system-info", timeout=20)
+            response_status = response.status_code
             
             # We expect this to fail gracefully since we don't have real SSH servers
             if response.status_code in [200, 500]:  # Either success or expected SSH failure
                 if response.status_code == 200:
                     data = response.json()
                     self.log_test("SSH System Info (Success)", True, f"CPU: {data.get('cpu_percent', 'N/A')}%")
+                    success_count += 1
                 else:
                     # Check if it's a proper SSH error
                     error_text = response.text
@@ -176,7 +179,7 @@ MIIEpAIBAAKCAQEA1234567890abcdef...
         except Exception as e:
             self.log_test("SSH System Info", False, f"Error: {str(e)}")
         
-        return success_count > 0 or response.status_code == 200
+        return success_count > 0 or response_status == 200
     
     def test_system_monitoring(self) -> bool:
         """Test system monitoring endpoints"""
