@@ -137,15 +137,18 @@ backend:
 
   - task: "Intégration LDAP/Active Directory"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté authentification LDAP avec ldap3, configuration dynamique, support AD avec bind DN, endpoints config LDAP"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Intégration LDAP/AD opérationnelle. Configuration LDAP sauvegardée ✅, récupération config (mot de passe masqué) ✅, contrôle d'accès admin uniquement ✅. Endpoints /auth/ldap/config POST/GET fonctionnels avec permissions appropriées."
 
   - task: "Gestion des utilisateurs (CRUD, permissions)"
     implemented: true
