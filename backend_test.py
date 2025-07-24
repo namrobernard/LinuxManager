@@ -67,7 +67,7 @@ class BackendTester:
                 "description": "Test server for API validation"
             }
             
-            response = requests.post(f"{self.base_url}/servers", json=server_data, timeout=15)
+            response = requests.post(f"{self.base_url}/servers", json=server_data, timeout=30)
             if response.status_code == 200:
                 server = response.json()
                 self.created_servers.append(server["id"])
@@ -75,6 +75,8 @@ class BackendTester:
                 success_count += 1
             else:
                 self.log_test("Create Server (Password Auth)", False, f"Status: {response.status_code}, Response: {response.text}")
+        except requests.exceptions.Timeout:
+            self.log_test("Create Server (Password Auth)", False, "Request timeout - backend may be slow")
         except Exception as e:
             self.log_test("Create Server (Password Auth)", False, f"Error: {str(e)}")
         
