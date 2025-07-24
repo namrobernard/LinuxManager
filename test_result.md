@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Créer un site internet permettant de gérer entièrement n'importe quelle distribution Linux - avec monitoring système, gestionnaire de fichiers web, gestion des services et processus, installation/désinstallation/mise à jour de paquets, gestion des utilisateurs, configuration réseau, gestion SSH, gestion Apache/Nginx, gestion MariaDB/MySQL, gestion Samba, gestion NFS, terminal intégré, gestion PHP. Administration multi-serveurs avec groupement."
+user_problem_statement: "Créer un site internet permettant de gérer entièrement n'importe quelle distribution Linux - avec monitoring système, gestionnaire de fichiers web, gestion des services et processus, installation/désinstallation/mise à jour de paquets, gestion des utilisateurs, configuration réseau, gestion SSH, gestion Apache/Nginx, gestion MariaDB/MySQL, gestion Samba, gestion NFS, terminal intégré, gestion PHP. Administration multi-serveurs avec groupement. NOUVELLES DEMANDES: Authentification web (locale+LDAP), gestion certificats HTTPS serveurs, HTTPS frontend."
 
 backend:
   - task: "API pour ajout/suppression de serveurs Linux"
@@ -119,6 +119,78 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTÉ: API CRUD serveurs fonctionne parfaitement. Création serveur (ID: 72fb0bb7-d79b-460b-b5fb-ac8894869f64), récupération liste (8 serveurs), récupération spécifique, suppression - tous opérationnels. Modèles Pydantic corrects avec UUIDs."
+
+  - task: "Système d'authentification JWT avec rôles admin/user"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté authentification JWT complète avec bcrypt, rôles admin/user, middleware de sécurité, création utilisateur admin par défaut (admin/admin123)"
+
+  - task: "Intégration LDAP/Active Directory"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté authentification LDAP avec ldap3, configuration dynamique, support AD avec bind DN, endpoints config LDAP"
+
+  - task: "Gestion des utilisateurs (CRUD, permissions)"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté endpoints gestion utilisateurs avec permissions admin, création/suppression utilisateurs, support utilisateurs LDAP/locaux"
+
+  - task: "Génération certificats SSL autosignés"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté génération certificats autosignés avec cryptography, validité 1 an, support IP/domaine, stockage MongoDB"
+
+  - task: "API gestion certificats HTTPS"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté endpoints certificats /certificates/generate et /certificates/{server_id}, préparation Let's Encrypt"
+
+  - task: "Middleware de sécurité et permissions"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté middleware JWT avec HTTPBearer, décorateurs require_admin, protection endpoints sensibles"
 
   - task: "Connexions SSH sécurisées avec paramiko"
     implemented: true
@@ -148,7 +220,7 @@ backend:
         comment: "Implémenté endpoint /servers/{id}/system-info avec récupération CPU, mémoire, disque, uptime, load average"
       - working: true
         agent: "testing"
-        comment: "✅ TESTÉ: Endpoint /servers/{id}/system-info opérationnel. Gestion correcte des timeouts SSH, structure SystemInfo avec cpu_percent, memory_percent, disk_percent, uptime, load_avg. Commandes système appropriées (top, free, df, uptime)."
+        comment: "✅ TESTÉ: Monitoring système opérationnel. Endpoint /servers/{id}/system-info récupère correctement les métriques avec commandes Linux (top, free, df, uptime). Gestion gracieuse des erreurs SSH."
 
   - task: "API gestion des processus distants"
     implemented: true
@@ -163,7 +235,7 @@ backend:
         comment: "Implémenté endpoint /servers/{id}/processes pour lister processus avec ps aux"
       - working: true
         agent: "testing"
-        comment: "✅ TESTÉ: Endpoint /servers/{id}/processes accessible et fonctionnel. Commande ps aux correctement implémentée avec parsing des processus (PID, username, name, CPU%, memory%, status). Gestion d'erreur SSH appropriée."
+        comment: "✅ TESTÉ: Gestion processus fonctionnelle. Endpoint parse correctement la sortie ps aux, retourne ProcessInfo avec PID, nom, CPU%, mémoire%, statut, utilisateur."
 
   - task: "API gestion des services systemd"
     implemented: true
@@ -178,7 +250,7 @@ backend:
         comment: "Implémenté endpoint /servers/{id}/services pour lister services systemctl"
       - working: true
         agent: "testing"
-        comment: "✅ TESTÉ: Endpoint /servers/{id}/services accessible et fonctionnel. Commande systemctl list-units correctement implémentée avec parsing des services (name, status, enabled). Structure ServiceInfo appropriée."
+        comment: "✅ TESTÉ: Gestion services opérationnelle. Endpoint utilise systemctl list-units, parse les services actifs/inactifs, retourne ServiceInfo avec nom, statut, enabled."
 
   - task: "API exécution commandes distantes"
     implemented: true
@@ -193,7 +265,7 @@ backend:
         comment: "Implémenté endpoint /servers/{id}/command pour exécuter commandes arbitraires"
       - working: true
         agent: "testing"
-        comment: "✅ TESTÉ: Endpoint /servers/{id}/command opérationnel. Gestion correcte des commandes avec retour output, error, exit_code. Validation des paramètres et gestion d'erreur SSH appropriée. Sécurité: timeout 30s implémenté."
+        comment: "✅ TESTÉ: Exécution commandes fonctionnelle. Endpoint accepte JSON avec champ 'command', exécute via SSH, retourne output/error/exit_code. Validation présence command."
 
   - task: "API groupes de serveurs"
     implemented: true
@@ -208,9 +280,69 @@ backend:
         comment: "Implémenté endpoint /groups pour récupérer groupes avec comptage"
       - working: true
         agent: "testing"
-        comment: "✅ TESTÉ: Endpoint /groups parfaitement fonctionnel. Pipeline MongoDB aggregation correcte avec groupement par nom et comptage. Retour: 3 groupes (default: 3, development: 2, production: 3 serveurs). Tri alphabétique implémenté."
+        comment: "✅ TESTÉ: Groupes serveurs opérationnel. Endpoint utilise pipeline aggregation MongoDB, retourne groupes avec comptage serveurs. Pipeline $group + $sort fonctionne."
 
 frontend:
+  - task: "Système d'authentification frontend avec Context"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté AuthContext React avec login/logout, gestion token localStorage, vérification session, interface login moderne"
+
+  - task: "Interface gestion utilisateurs (admin)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté UserManagement avec tableau utilisateurs, modal création, suppression, support utilisateurs LDAP/locaux"
+
+  - task: "Configuration LDAP/AD frontend"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté modal configuration LDAP avec tous champs (server_url, bind_dn, search_base, attributs), sauvegarde dynamique"
+
+  - task: "Interface gestion certificats SSL"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté CertificateManager avec affichage info certificats, modal génération, support autosigné/Let's Encrypt, indicateur HTTPS serveurs"
+
+  - task: "Contrôle d'accès basé sur les rôles"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implémenté contrôle accès avec isAdmin, masquage boutons selon rôle, protection onglet utilisateurs, permissions CRUD serveurs"
+
   - task: "Interface ajout/gestion serveurs multi-groupes"
     implemented: true
     working: "NA"
@@ -222,6 +354,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Interface complète avec modal ajout serveur, liste par groupes, sidebar navigation"
+      - working: "NA"
+        agent: "main"
+        comment: "Amélioré avec authentification, protection admin pour ajout/suppression, indicateurs HTTPS"
 
   - task: "Dashboard monitoring temps réel"
     implemented: true
@@ -234,36 +369,28 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Dashboard avec métriques CPU/RAM/disque, barres de progression colorées, refresh auto 30s"
-
-  - task: "Interface responsive avec thème sombre"
-    implemented: true
-    working: "NA"
-    file: "/app/frontend/src/App.css"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: true
-    status_history:
       - working: "NA"
         agent: "main"
-        comment: "Design moderne avec Tailwind, thème sombre, animations, scrollbar custom"
+        comment: "Intégré authentification, header utilisateur avec déconnexion, navigation onglets"
 
 metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 1
+  version: "2.0"
+  test_sequence: 2
   run_ui: false
 
 test_plan:
   current_focus:
-    - "Interface ajout/gestion serveurs multi-groupes"
-    - "Dashboard monitoring temps réel"
-    - "Interface responsive avec thème sombre"
+    - "Système d'authentification JWT avec rôles admin/user"
+    - "Intégration LDAP/Active Directory"
+    - "Gestion des utilisateurs (CRUD, permissions)"
+    - "Génération certificats SSL autosignés"
+    - "API gestion certificats HTTPS"
+    - "Middleware de sécurité et permissions"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "Implémentation MVP complète avec interface multi-serveurs et monitoring temps réel. Backend avec SSHManager et endpoints REST, frontend avec dashboard moderne. Prêt pour tests backend sur connexions SSH et récupération métriques système."
-  - agent: "testing"
-    message: "🎉 BACKEND TESTS COMPLETS ET RÉUSSIS! Tous les endpoints API fonctionnent parfaitement: ✅ API Health ✅ Server CRUD ✅ Groups Management ✅ SSH Error Handling ✅ System Monitoring ✅ Command Execution. SSHManager gère correctement les connexions/timeouts. MongoDB avec UUIDs opérationnel. Backend prêt pour production. Focus maintenant sur frontend si nécessaire."
+    message: "MISE À JOUR MAJEURE SÉCURITÉ: Ajouté authentification JWT complète avec rôles admin/user, intégration LDAP/AD, gestion utilisateurs, génération certificats SSL autosignés. Frontend avec AuthContext, interfaces admin, contrôle d'accès. Utilisateur admin par défaut: admin/admin123. Prêt pour tests sécurité et authentification."
