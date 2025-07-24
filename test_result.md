@@ -152,15 +152,18 @@ backend:
 
   - task: "Gestion des utilisateurs (CRUD, permissions)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoints gestion utilisateurs avec permissions admin, création/suppression utilisateurs, support utilisateurs LDAP/locaux"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Gestion utilisateurs excellente. Création utilisateur (admin uniquement) ✅, récupération liste utilisateurs ✅, login utilisateur régulier ✅, contrôle d'accès basé sur rôles ✅. Utilisateurs réguliers bloqués des opérations admin (403). CRUD complet fonctionnel."
 
   - task: "Génération certificats SSL autosignés"
     implemented: true
