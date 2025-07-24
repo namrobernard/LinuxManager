@@ -107,87 +107,108 @@ user_problem_statement: "Créer un site internet permettant de gérer entièreme
 backend:
   - task: "API pour ajout/suppression de serveurs Linux"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté les endpoints pour CRUD des serveurs avec connexions SSH, modèles Server et ServerCreate"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: API CRUD serveurs fonctionne parfaitement. Création serveur (ID: 72fb0bb7-d79b-460b-b5fb-ac8894869f64), récupération liste (8 serveurs), récupération spécifique, suppression - tous opérationnels. Modèles Pydantic corrects avec UUIDs."
 
   - task: "Connexions SSH sécurisées avec paramiko"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté SSHManager avec support clé SSH et mot de passe, gestion des connexions"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Gestion SSH excellente. SSHManager gère correctement les timeouts et erreurs de connexion. Endpoints system-info, processes, services, command gèrent proprement les échecs SSH avec messages d'erreur appropriés. Support password et SSH key implémenté."
 
   - task: "Monitoring système temps réel (CPU, RAM, disque)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoint /servers/{id}/system-info avec récupération CPU, mémoire, disque, uptime, load average"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Endpoint /servers/{id}/system-info opérationnel. Gestion correcte des timeouts SSH, structure SystemInfo avec cpu_percent, memory_percent, disk_percent, uptime, load_avg. Commandes système appropriées (top, free, df, uptime)."
 
   - task: "API gestion des processus distants"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoint /servers/{id}/processes pour lister processus avec ps aux"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Endpoint /servers/{id}/processes accessible et fonctionnel. Commande ps aux correctement implémentée avec parsing des processus (PID, username, name, CPU%, memory%, status). Gestion d'erreur SSH appropriée."
 
   - task: "API gestion des services systemd"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoint /servers/{id}/services pour lister services systemctl"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Endpoint /servers/{id}/services accessible et fonctionnel. Commande systemctl list-units correctement implémentée avec parsing des services (name, status, enabled). Structure ServiceInfo appropriée."
 
   - task: "API exécution commandes distantes"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoint /servers/{id}/command pour exécuter commandes arbitraires"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Endpoint /servers/{id}/command opérationnel. Gestion correcte des commandes avec retour output, error, exit_code. Validation des paramètres et gestion d'erreur SSH appropriée. Sécurité: timeout 30s implémenté."
 
   - task: "API groupes de serveurs"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "low"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoint /groups pour récupérer groupes avec comptage"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Endpoint /groups parfaitement fonctionnel. Pipeline MongoDB aggregation correcte avec groupement par nom et comptage. Retour: 3 groupes (default: 3, development: 2, production: 3 serveurs). Tri alphabétique implémenté."
 
 frontend:
   - task: "Interface ajout/gestion serveurs multi-groupes"
