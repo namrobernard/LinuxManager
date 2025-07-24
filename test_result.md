@@ -182,15 +182,18 @@ backend:
 
   - task: "API gestion certificats HTTPS"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté endpoints certificats /certificates/generate et /certificates/{server_id}, préparation Let's Encrypt"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: API gestion certificats HTTPS opérationnelle. Endpoint /certificates/generate (admin uniquement) ✅, récupération info certificat /certificates/{server_id} ✅, contrôle d'accès approprié (utilisateurs réguliers obtiennent infos limitées sans clés privées) ✅."
 
   - task: "Middleware de sécurité et permissions"
     implemented: true
