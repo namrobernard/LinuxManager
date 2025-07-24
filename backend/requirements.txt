@@ -8,3 +8,8 @@ python-multipart==0.0.6
 starlette==0.27.0
 paramiko==3.3.1
 psutil==5.9.6
+PyJWT==2.8.0
+bcrypt==4.1.2
+ldap3==2.9.1
+cryptography==41.0.8
+python-jose[cryptography]==3.3.0
