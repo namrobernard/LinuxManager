@@ -197,15 +197,18 @@ backend:
 
   - task: "Middleware de sécurité et permissions"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté middleware JWT avec HTTPBearer, décorateurs require_admin, protection endpoints sensibles"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Middleware de sécurité et permissions excellent. Protection endpoints avec authentification JWT ✅, contrôle d'accès basé sur rôles (admin/user) ✅, décorateur require_admin fonctionnel ✅. Tous les endpoints serveurs/utilisateurs/certificats/LDAP correctement protégés."
 
   - task: "Connexions SSH sécurisées avec paramiko"
     implemented: true
