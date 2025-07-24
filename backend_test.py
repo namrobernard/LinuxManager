@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Linux Server Management System
-Tests all backend endpoints and SSH functionality
+Backend API Testing for Linux Server Management System with Security Features
+Tests authentication, user management, LDAP, certificates, and server management
 """
 
 import requests
 import json
 import time
 import sys
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 # Get backend URL from environment
 BACKEND_URL = "https://5877c0ca-28ed-4742-9bc6-d8bcedeb54dd.preview.emergentagent.com/api"
@@ -18,6 +18,9 @@ class BackendTester:
         self.base_url = BACKEND_URL
         self.test_results = []
         self.created_servers = []  # Track servers created during testing
+        self.created_users = []    # Track users created during testing
+        self.admin_token = None    # Admin JWT token
+        self.user_token = None     # Regular user JWT token
         
     def log_test(self, test_name: str, success: bool, details: str = ""):
         """Log test result"""
