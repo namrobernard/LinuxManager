@@ -167,15 +167,18 @@ backend:
 
   - task: "Génération certificats SSL autosignés"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Implémenté génération certificats autosignés avec cryptography, validité 1 an, support IP/domaine, stockage MongoDB"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTÉ: Génération certificats SSL autosignés parfaitement fonctionnelle. Création certificat pour domaine test.example.com ✅, stockage MongoDB ✅, informations certificat récupérables ✅. Support organisation/pays personnalisés. Validité 1 an configurée."
 
   - task: "API gestion certificats HTTPS"
     implemented: true
